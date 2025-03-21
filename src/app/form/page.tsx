@@ -96,7 +96,7 @@ export default function FormPage() {
         localStorage.setItem("travelSchedule", JSON.stringify(formData));
         router.push("/list");
       } catch (error){
-        setSubmissionError("データの保存中にエラーが発生しました。")
+        setSubmissionError("データの保存中にエラーが発生しました。");
       }
     } else {
       window.scrollTo(0, 0);
