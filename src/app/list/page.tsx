@@ -2,9 +2,7 @@
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowBigLeft } from 'lucide-react';
 
 export default function ListPage() {
     return (
