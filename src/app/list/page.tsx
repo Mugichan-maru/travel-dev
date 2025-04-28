@@ -9,7 +9,8 @@ import { Calendar, Clock, Users } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-export default function TravelItinerary() {
+// TravelInfoコンポーネントを分離
+function TravelInfo() {
   const params = useSearchParams();
 
   // URLパラメータから値を取得
@@ -21,13 +22,7 @@ export default function TravelItinerary() {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-gray-50 min-h-screen p-4 flex flex-col">
-      {/* ヘッダー部分 */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="h-1 bg-gray-300 flex-grow mr-2"></div>
-        <div className="h-1 bg-gray-200 w-16"></div>
-      </div>
-
+    <>
       {/* 旅行基本情報 */}
       <div className="grid grid-cols-2 gap-3 mb-4">
         <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
@@ -62,6 +57,23 @@ export default function TravelItinerary() {
           <Users className="w-5 h-5 text-gray-500" />
         </button>
       </div>
+    </>
+  );
+}
+
+export default function TravelItinerary() {
+  return (
+    <div className="max-w-md mx-auto bg-gray-50 min-h-screen p-4 flex flex-col">
+      {/* ヘッダー部分 */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="h-1 bg-gray-300 flex-grow mr-2"></div>
+        <div className="h-1 bg-gray-200 w-16"></div>
+      </div>
+
+      {/* SuspenseでTravelInfoをラップ */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <TravelInfo />
+      </Suspense>
 
       {/* コンテンツエリア - 3つのカード */}
       {[1, 2, 3].map((item) => (
