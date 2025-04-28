@@ -93,21 +93,18 @@ export default function FormPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    const query = new URLSearchParams(formData);
-    router.push(`/list?${query}`);
-
-    // setSubmissionError(null);
-    // if (validateForm()) {
-    //   try {
-    //     localStorage.setItem("travelSchedule", JSON.stringify(formData));
-    //     router.push("/list");
-    //   } catch (error) {
-    //     setSubmissionError("データの保存中にエラーが発生しました。");
-    //   }
-    // } else {
-    //   window.scrollTo(0, 0);
-    // }
+    // フォームのバリデーション
+    setSubmissionError(null);
+    if (validateForm()) {
+      try {
+        const query = new URLSearchParams(formData);
+        router.push(`/list?${query}`);
+      } catch (error) {
+        setSubmissionError("エラーが発生しました。");
+      }
+    } else {
+      window.scrollTo(0, 0);
+    }
   };
 
   return (

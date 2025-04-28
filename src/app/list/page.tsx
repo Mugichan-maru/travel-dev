@@ -10,17 +10,16 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 // TravelInfoコンポーネントを分離
-function TravelInfo() {
-  const params = useSearchParams();
-
-  // URLパラメータから値を取得
-  const travelInfo = {
-    startDate: params.get("startDate") || "未設定",
-    stayNights: params.get("stayNights") || "未設定",
-    departureTime: params.get("departureTime") || "未設定",
-    disbandTime: params.get("disbandTime") || "未設定",
+function TravelInfo({
+  travelInfo,
+}: {
+  travelInfo: {
+    startDate: string;
+    stayNights: string;
+    departureTime: string;
+    disbandTime: string;
   };
-
+}) {
   return (
     <>
       {/* 旅行基本情報 */}
@@ -61,7 +60,62 @@ function TravelInfo() {
   );
 }
 
+function TravelContents({
+  travelInfo,
+}: {
+  travelInfo: {
+    startDate: string;
+    stayNights: string;
+    departureTime: string;
+    disbandTime: string;
+  };
+}) {
+  console.log("startDate:", travelInfo.startDate);
+  console.log("startDate:", typeof travelInfo.startDate);
+  console.log("total:", travelInfo.startDate + Number(travelInfo.stayNights));
+  const date = new Date(travelInfo.startDate);
+  date.setDate(date.getDate() + 1);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const formatted = `${year}-${month}-${day}`;
+  return (
+    <div>
+      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100">
+        <div className="font-medium">{travelInfo.startDate}</div>
+        <div className="font-medium">{travelInfo.departureTime}</div>
+        <div className="h-24 flex items-center justify-center">
+          <button className="text-gray-400">
+            <span className="text-2xl">+</span>
+          </button>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100">
+        <div className="font-medium">{formatted}</div>
+        <div className="font-medium">{travelInfo.disbandTime}</div>
+        <div className="h-24 flex items-center justify-center">
+          <button className="text-gray-400">
+            <span className="text-2xl">+</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function TravelItinerary() {
+  const params = useSearchParams();
+
+  // URLパラメータから値を取得
+  const travelInfo = {
+    startDate: params.get("startDate") || "未設定",
+    stayNights: params.get("stayNights") || "未設定",
+    departureTime: params.get("departureTime") || "未設定",
+    disbandTime: params.get("disbandTime") || "未設定",
+  };
+
   return (
     <div className="max-w-md mx-auto bg-gray-50 min-h-screen p-4 flex flex-col">
       {/* ヘッダー部分 */}
@@ -72,37 +126,27 @@ export default function TravelItinerary() {
 
       {/* SuspenseでTravelInfoをラップ */}
       <Suspense fallback={<div>Loading...</div>}>
-        <TravelInfo />
+        <TravelInfo travelInfo={travelInfo} />
       </Suspense>
 
       {/* コンテンツエリア - 3つのカード */}
-      {[1, 2, 3].map((item) => (
-        <div
-          key={item}
-          className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100 relative"
-        >
-          <div className="absolute top-4 left-4 bg-gray-200 w-10 h-10 rounded-md"></div>
-          <div className="h-32 flex items-center justify-center">
-            <button className="text-gray-400">
-              <span className="text-2xl">+</span>
-            </button>
-          </div>
-        </div>
+      {[1].map((item) => (
+        <TravelContents key={item} travelInfo={travelInfo} />
       ))}
 
       {/* 戻るボタン */}
       <Link href="/form" className="block">
-        <button className="bg-black w-full text-white rounded-full py-3 px-6 w-32 mx-auto mb-4">
+        <button className="bg-black w-full text-white rounded-full py-3 px-6 mx-auto mb-4">
           戻る
         </button>
       </Link>
 
       {/* ナビゲーションアイコン */}
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <div className="bg-black text-white rounded-full w-10 h-10 flex items-center justify-center">
           <span className="font-semibold">N</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
