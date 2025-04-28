@@ -106,12 +106,12 @@ export default function TravelItinerary() {
       {/* SuspenseでTravelInfoをラップ */}
       <Suspense fallback={<div>Loading...</div>}>
         <TravelInfo travelInfo={travelInfo} />
-
-        {/* コンテンツエリア - 3つのカード */}
-        {[1].map((item) => (
-          <TravelContents key={item} travelInfo={travelInfo} />
-        ))}
       </Suspense>
+
+      {/* コンテンツエリア - 3つのカード */}
+      {[1].map((item) => (
+        <TravelContents key={item} travelInfo={travelInfo} />
+      ))}
 
       {/* 戻るボタン */}
       <Link href="/form" className="block">
