@@ -2,10 +2,6 @@
 "use client";
 
 import Link from "next/link";
-import { Plus } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Calendar, Clock, Users } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
@@ -110,12 +106,12 @@ export default function TravelItinerary() {
       {/* SuspenseでTravelInfoをラップ */}
       <Suspense fallback={<div>Loading...</div>}>
         <TravelInfo travelInfo={travelInfo} />
-      </Suspense>
 
-      {/* コンテンツエリア - 3つのカード */}
-      {[1].map((item) => (
-        <TravelContents key={item} travelInfo={travelInfo} />
-      ))}
+        {/* コンテンツエリア - 3つのカード */}
+        {[1].map((item) => (
+          <TravelContents key={item} travelInfo={travelInfo} />
+        ))}
+      </Suspense>
 
       {/* 戻るボタン */}
       <Link href="/form" className="block">
