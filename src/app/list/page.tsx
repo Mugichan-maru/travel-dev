@@ -5,21 +5,14 @@ import Link from "next/link";
 import { Plus } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Calendar, Clock, Users } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
+import { FormData } from "../types/form";
 
 // TravelInfoコンポーネントを分離
-function TravelInfo({
-  travelInfo,
-}: {
-  travelInfo: {
-    startDate: string;
-    stayNights: string;
-    departureTime: string;
-    disbandTime: string;
-  };
-}) {
+function TravelInfo({ travelInfo }: { travelInfo: FormData }) {
   return (
     <>
       {/* 旅行基本情報 */}
@@ -42,13 +35,15 @@ function TravelInfo({
 
       {/* 集合・解散時間 */}
       <div className="flex mb-4">
-        <div className="bg-white rounded-full py-2 px-4 flex items-center flex-grow shadow-sm border border-gray-100">
+        <div className="bg-white rounded-full py-2 px-6 flex items-center flex-grow shadow-sm border border-gray-100">
           <div className="flex items-center">
             <Clock className="w-4 h-4 mr-2 text-gray-500" />
             <span className="text-sm mr-2">
-              集合: {travelInfo.departureTime}
+              集合:
+              {/* <Input value={travelInfo.departureTime} /> */}
             </span>
             <span className="mx-2 text-gray-300">|</span>
+            <Clock className="w-4 h-4 mr-2 text-gray-500" />
             <span className="text-sm">解散: {travelInfo.disbandTime}</span>
           </div>
         </div>
@@ -60,21 +55,9 @@ function TravelInfo({
   );
 }
 
-function TravelContents({
-  travelInfo,
-}: {
-  travelInfo: {
-    startDate: string;
-    stayNights: string;
-    departureTime: string;
-    disbandTime: string;
-  };
-}) {
-  console.log("startDate:", travelInfo.startDate);
-  console.log("startDate:", typeof travelInfo.startDate);
-  console.log("total:", travelInfo.startDate + Number(travelInfo.stayNights));
+function TravelContents({ travelInfo }: { travelInfo: FormData }) {
   const date = new Date(travelInfo.startDate);
-  date.setDate(date.getDate() + 1);
+  date.setDate(date.getDate() + Number(travelInfo.stayNights));
 
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");

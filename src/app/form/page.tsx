@@ -6,20 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bird } from "lucide-react";
 import { useRouter } from "next/navigation";
-
-type FormData = {
-  startDate: string;
-  stayNights: string;
-  departureTime: string;
-  disbandTime: string;
-};
-
-type FormErrors = {
-  startDate?: string;
-  stayNights?: string;
-  departureTime?: string;
-  disbandTime?: string;
-};
+import { FormData, FormErrors } from "../types/form";
 
 export default function FormPage() {
   const router = useRouter();
