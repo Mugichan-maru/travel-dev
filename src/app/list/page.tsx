@@ -108,16 +108,6 @@ function TravelScheduleContent() {
 }
 
 export default function TravelItinerary() {
-  const params = useSearchParams();
-
-  // URLパラメータから値を取得
-  const travelInfo = {
-    startDate: params.get("startDate") || "未設定",
-    stayNights: params.get("stayNights") || "未設定",
-    departureTime: params.get("departureTime") || "未設定",
-    disbandTime: params.get("disbandTime") || "未設定",
-  };
-
   return (
     <div className="max-w-md mx-auto bg-gray-50 min-h-screen p-4 flex flex-col">
       {/* ヘッダー部分 */}
@@ -130,11 +120,6 @@ export default function TravelItinerary() {
       <Suspense fallback={<div>Loading...</div>}>
         <TravelScheduleContent />
       </Suspense>
-
-      {/* コンテンツエリア - 3つのカード */}
-      {/* {[1].map((item) => (
-        <TravelContents key={item} travelInfo={travelInfo} />
-      ))} */}
 
       {/* 戻るボタン */}
       <Link href="/form" className="block">
