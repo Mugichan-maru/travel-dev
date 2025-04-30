@@ -2,11 +2,21 @@
 "use client";
 
 import Link from "next/link";
-import { Calendar, Clock, Users } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  Edit,
+  Info,
+  MapPin,
+  Plus,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
-import { Suspense } from "react";
-import { FormData } from "../types/form";
+import { Suspense, useState } from "react";
+import { FormData, TravelItem } from "../types/form";
+import AddTravelModal from "@/components/add-travel-modal";
 
 // TravelInfoコンポーネントを分離
 function TravelInfo({ travelInfo }: { travelInfo: FormData }) {
@@ -52,34 +62,44 @@ function TravelInfo({ travelInfo }: { travelInfo: FormData }) {
   );
 }
 
-function TravelContents({ travelInfo }: { travelInfo: FormData }) {
-  const date = new Date(travelInfo.startDate);
-  date.setDate(date.getDate() + Number(travelInfo.stayNights));
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const formatted = `${year}-${month}-${day}`;
+function TravelContents({ item }: { item: TravelItem }) {
   return (
-    <div>
-      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100">
-        <div className="font-medium">{travelInfo.startDate}</div>
-        <div className="font-medium">{travelInfo.departureTime}</div>
-        <div className="h-24 flex items-center justify-center">
-          <button className="text-gray-400">
-            <span className="text-2xl">+</span>
-          </button>
+    <div className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100 relative">
+      <div className="absolute top-4 right-4">
+        <button className="text-gray-400 hover:text-gray-600">
+          <Edit className="w-4 h-4" />
+        </button>
+      </div>
+
+      <div className="flex items-center mb-3">
+        <div className="bg-gray-100 rounded-md w-10 h-10 flex items-center justify-center mr-3">
+          <Calendar className="w-5 h-5 text-gray-500" />
+        </div>
+        <div>
+          <div className="text-sm font-medium">{item.date}</div>
+          <div className="text-xs text-gray-500">{item.time}</div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100">
-        <div className="font-medium">{formatted}</div>
-        <div className="font-medium">{travelInfo.disbandTime}</div>
-        <div className="h-24 flex items-center justify-center">
-          <button className="text-gray-400">
-            <span className="text-2xl">+</span>
-          </button>
+      <div className="mb-3 ml-0">
+        <h3 className="font-medium mb-1">{item.title}</h3>
+
+        <div className="flex items-start text-xs text-gray-500 mb-1">
+          <MapPin className="w-3 h-3 mr-1 mt-0.5" />
+          <span>{item.location}</span>
         </div>
+
+        <div className="flex items-start text-xs text-gray-500 mb-1">
+          <Wallet className="w-3 h-3 mr-1 mt-0.5" />
+          <span>{item.cost}</span>
+        </div>
+
+        {item.notes && (
+          <div className="flex items-start text-xs text-gray-500">
+            <Info className="w-3 h-3 mr-1 mt-0.5" />
+            <span>{item.notes}</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -88,6 +108,7 @@ function TravelContents({ travelInfo }: { travelInfo: FormData }) {
 function TravelScheduleContent() {
   const params = useSearchParams();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   // URLパラメータから値を取得
   const travelInfo = {
     startDate: params.get("startDate") || "未設定",
@@ -96,13 +117,68 @@ function TravelScheduleContent() {
     disbandTime: params.get("disbandTime") || "未設定",
   };
 
+  // 新しい予定を追加する関数
+  const handleAddTravel = (newItem: TravelItem) => {
+    setTravelItems((prev) => [
+      ...prev,
+      { ...newItem, id: Date.now(), isCompleted: false },
+    ]);
+  };
+
+  // テストデータ
+  const [travelItems, setTravelItems] = useState<TravelItem[]>([
+    {
+      id: 1,
+      date: "5月15日（木）",
+      time: "10:00 - 12:00",
+      startTime: "10:00",
+      endTime: "12:00",
+      title: "東京駅集合・新幹線で京都へ",
+      location: "東京駅八重洲口",
+      cost: "14,000円",
+      notes: "新幹線のぞみ123号、指定席8号車",
+      isCompleted: false,
+    },
+    {
+      id: 2,
+      date: "5月15日（木）",
+      time: "14:00 - 16:00",
+      startTime: "14:00",
+      endTime: "16:00",
+      title: "清水寺観光",
+      location: "京都市東山区",
+      cost: "400円",
+      notes: "拝観料が必要です",
+      isCompleted: false,
+    },
+  ]);
+
   return (
     <>
       <TravelInfo travelInfo={travelInfo} />
-
-      {[1].map((item) => (
-        <TravelContents key={item} travelInfo={travelInfo} />
+      {travelItems.map((item) => (
+        <TravelContents key={item.id} item={item} />
       ))}
+
+      {/* 新規追加用のカード */}
+      <div
+        className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100 cursor-pointer hover:bg-gray-50"
+        onClick={() => setIsModalOpen(true)}
+      >
+        <div className="h-32 flex flex-col items-center justify-center">
+          <button className="bg-gray-100 rounded-full p-3 text-gray-400 hover:bg-gray-200 mb-2">
+            <Plus className="w-6 h-6" />
+          </button>
+          <span className="text-sm text-gray-400">新しい予定を追加</span>
+        </div>
+      </div>
+
+      {/* 予定追加モーダル */}
+      <AddTravelModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddTravel}
+      />
     </>
   );
 }
@@ -127,7 +203,6 @@ export default function TravelItinerary() {
           戻る
         </button>
       </Link>
-
       {/* ナビゲーションアイコン */}
       {/* <div className="flex justify-center">
         <div className="bg-black text-white rounded-full w-10 h-10 flex items-center justify-center">
