@@ -61,7 +61,7 @@ export default function AddTravelModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white flex items-center justify-center z-50 p-4 animate-fadeIn">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fadeIn">
       <div className="bg-white rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-scaleIn">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="font-bold text-lg">予定を追加</h2>
