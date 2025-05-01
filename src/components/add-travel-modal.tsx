@@ -8,13 +8,14 @@ import { TravelItem, AddTravelModalProps } from "@/app/types/form";
 
 export default function AddTravelModal({
   isOpen,
+  travelInfo,
   onClose,
   onSave,
 }: AddTravelModalProps) {
   const initialFormState = {
-    date: "",
-    startTime: "",
-    endTime: "",
+    date: travelInfo.startDate || "",
+    startTime: travelInfo.departureTime || "",
+    endTime: travelInfo.disbandTime || "",
     title: "",
     location: "",
     cost: "",
@@ -66,7 +67,7 @@ export default function AddTravelModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <div className="bg-white rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-scaleIn">
+      <div className="bg-white rounded-xl w-full max-w-md max-h-[85vh] overflow-y-auto animate-scaleIn">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="font-bold text-lg">予定を追加</h2>
           <button
@@ -223,7 +224,7 @@ export default function AddTravelModal({
                 type="submit"
                 className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
               >
-                保存
+                追加
               </button>
             </div>
           </div>

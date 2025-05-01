@@ -10,6 +10,7 @@ export default function EditTravelModal({
   isOpen,
   travelInfo,
   onClose,
+  onDelete,
   onSave,
 }: EditTravelModalProps) {
   const [formData, setFormData] = useState(travelInfo);
@@ -55,7 +56,7 @@ export default function EditTravelModal({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4 animate-fadeIn">
-      <div className="bg-white rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-scaleIn">
+      <div className="bg-white rounded-xl w-full max-w-md max-h-[85vh] overflow-y-auto animate-scaleIn">
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="font-bold text-lg">予定を追加</h2>
           <button
@@ -200,20 +201,33 @@ export default function EditTravelModal({
               ></textarea>
             </div>
 
-            <div className="flex justify-end space-x-2 pt-2">
+            <div className="flex justify-between space-x-2 pt-2">
               <button
                 type="button"
-                onClick={onClose}
-                className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
+                onClick={() => {
+                  onDelete(formData.id);
+                  onClose();
+                }}
+                className="px-4 py-2  bg-red-500 text-white rounded-md hover:bg-red-700"
               >
-                キャンセル
+                削除
               </button>
-              <button
-                type="submit"
-                className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
-              >
-                保存
-              </button>
+
+              <div className="flex space-x-4">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="px-4 py-2 border rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  キャンセル
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
+                >
+                  更新
+                </button>
+              </div>
             </div>
           </div>
         </form>

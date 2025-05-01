@@ -67,12 +67,14 @@ function TravelInfo({ travelInfo }: { travelInfo: FormData }) {
 function TravelContents({
   item,
   onEdit,
+  onDelete,
 }: {
   item: TravelItem;
   onEdit: (item: TravelItem) => void;
+  onDelete: (id: number) => void;
 }) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  console.log("item:", item);
+  // console.log("item:", item);
 
   return (
     <>
@@ -123,6 +125,10 @@ function TravelContents({
         onClose={() => setIsEditModalOpen(false)}
         onSave={(editedItem: TravelItem) => {
           onEdit(editedItem);
+          setIsEditModalOpen(false);
+        }}
+        onDelete={() => {
+          onDelete(item.id);
           setIsEditModalOpen(false);
         }}
         travelInfo={item}
@@ -195,11 +201,20 @@ function TravelScheduleContent() {
     );
   };
 
+  const handleDeleteTravel = (id: number) => {
+    setTravelItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
   return (
     <>
       <TravelInfo travelInfo={travelInfo} />
       {travelItems.map((item) => (
-        <TravelContents key={item.id} item={item} onEdit={handleEditTravel} />
+        <TravelContents
+          key={item.id}
+          item={item}
+          onEdit={handleEditTravel}
+          onDelete={handleDeleteTravel}
+        />
       ))}
 
       {/* 新規追加用のカード */}
@@ -220,6 +235,7 @@ function TravelScheduleContent() {
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         onSave={handleAddTravel}
+        travelInfo={travelInfo}
       />
     </>
   );
