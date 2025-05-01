@@ -4,24 +4,15 @@ import type React from "react";
 
 import { useState } from "react";
 import { Calendar, Clock, MapPin, Wallet, Info, X } from "lucide-react";
-import { TravelItem, AddTravelModalProps } from "@/app/types/form";
+import { TravelItem, EditTravelModalProps } from "@/app/types/form";
 
-export default function AddTravelModal({
+export default function EditTravelModal({
   isOpen,
+  travelInfo,
   onClose,
   onSave,
-}: AddTravelModalProps) {
-  const initialFormState = {
-    date: "",
-    startTime: "",
-    endTime: "",
-    title: "",
-    location: "",
-    cost: "",
-    notes: "",
-  };
-
-  const [formData, setFormData] = useState(initialFormState);
+}: EditTravelModalProps) {
+  const [formData, setFormData] = useState(travelInfo);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -30,19 +21,16 @@ export default function AddTravelModal({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // フォーム送信処理
+  // 保存処理
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // console.log("handleSubmit", formData);
     // 日付を「月日（曜日）」形式に変換
     const dateObj = new Date(formData.date);
-    // 月は0から始まるため、1を加算
     const month = dateObj.getMonth() + 1;
-    // 日付を取得
     const day = dateObj.getDate();
     const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
-    // 曜日を取得
-    // getDay()は0から6の整数を返すので、そのままインデックスとして使用
     const weekday = weekdays[dateObj.getDay()];
     const formattedDate = `${month}月${day}日（${weekday}）`;
 
@@ -52,13 +40,14 @@ export default function AddTravelModal({
     const newTravelItem: TravelItem = {
       ...formData,
       id: Date.now(),
-      formattedDate: formattedDate,
+      date: formData.date,
+      formattedDate,
       time: formattedTime,
-      isCompleted: false, // 新しい予定は未完了
+      isCompleted: false,
     };
 
     onSave(newTravelItem);
-    setFormData(initialFormState);
+    setFormData(travelInfo);
     onClose();
   };
 

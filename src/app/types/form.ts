@@ -15,6 +15,7 @@ export type FormErrors = {
 export type TravelItem = {
   id: number;
   date: string;
+  formattedDate?: string;
   time: string;
   startTime: string;
   endTime: string;
@@ -27,6 +28,13 @@ export type TravelItem = {
 
 export type AddTravelModalProps = {
   isOpen: boolean;
+  onClose: () => void;
+  onSave: (item: TravelItem) => void;
+};
+
+export type EditTravelModalProps = {
+  isOpen: boolean;
+  travelInfo: TravelItem;
   onClose: () => void;
   onSave: (item: TravelItem) => void;
 };
