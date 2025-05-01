@@ -22,10 +22,10 @@ export default function EditTravelModal({
   };
 
   // 保存処理
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // console.log("handleSubmit", formData);
+    // console.log("handleSave", formData);
     // 日付を「月日（曜日）」形式に変換
     const dateObj = new Date(formData.date);
     const month = dateObj.getMonth() + 1;
@@ -39,7 +39,7 @@ export default function EditTravelModal({
 
     const newTravelItem: TravelItem = {
       ...formData,
-      id: Date.now(),
+      id: formData.id,
       date: formData.date,
       formattedDate,
       time: formattedTime,
@@ -67,7 +67,7 @@ export default function EditTravelModal({
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4">
+        <form onSubmit={handleSave} className="p-4">
           <div className="space-y-4">
             <div>
               <label

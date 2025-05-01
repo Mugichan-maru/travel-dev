@@ -18,6 +18,7 @@ import { Suspense, useState } from "react";
 import { FormData, TravelItem } from "../types/form";
 import AddTravelModal from "@/components/add-travel-modal";
 import EditTravelModal from "@/components/edit-travel-modal";
+import { on } from "events";
 
 // TravelInfoコンポーネントを分離
 function TravelInfo({ travelInfo }: { travelInfo: FormData }) {
@@ -63,18 +64,15 @@ function TravelInfo({ travelInfo }: { travelInfo: FormData }) {
   );
 }
 
-function TravelContents({ item }: { item: TravelItem }) {
+function TravelContents({
+  item,
+  onEdit,
+}: {
+  item: TravelItem;
+  onEdit: (item: TravelItem) => void;
+}) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   console.log("item:", item);
-
-  const [travelItems, setTravelItems] = useState<TravelItem[]>([]);
-  // 編集した予定を追加する関数
-  const handleEditTravel = (newItem: TravelItem) => {
-    setTravelItems((prev) => [
-      ...prev,
-      { ...newItem, id: Date.now(), isCompleted: false },
-    ]);
-  };
 
   return (
     <>
@@ -123,7 +121,10 @@ function TravelContents({ item }: { item: TravelItem }) {
       <EditTravelModal
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
-        onSave={handleEditTravel}
+        onSave={(editedItem: TravelItem) => {
+          onEdit(editedItem);
+          setIsEditModalOpen(false);
+        }}
         travelInfo={item}
       />
     </>
@@ -188,11 +189,17 @@ function TravelScheduleContent() {
     ]);
   };
 
+  const handleEditTravel = (editedItem: TravelItem) => {
+    setTravelItems((prev) =>
+      prev.map((item) => (item.id === editedItem.id ? editedItem : item))
+    );
+  };
+
   return (
     <>
       <TravelInfo travelInfo={travelInfo} />
       {travelItems.map((item) => (
-        <TravelContents key={item.id} item={item} />
+        <TravelContents key={item.id} item={item} onEdit={handleEditTravel} />
       ))}
 
       {/* 新規追加用のカード */}
